@@ -7,13 +7,15 @@ interface Vector {
 
 export default class Snake {
     _p5: P5Instance;
-    pos: Vector;
+    body:Vector[] =[] ;
     vel: Vector;
 
     constructor(p5: P5Instance) {
         this._p5 = p5;
-        this.pos = {x: 20 , y: 10};
+        this.body[0] = {x: 20 , y: 10};
         this.vel = {x: 0 , y: 0};
+
+        this.body[1] = {x: 20 , y: 20};
     }
 
     setDir(x: number, y: number) {
@@ -35,19 +37,38 @@ export default class Snake {
             case p5.UP_ARROW:
                 this.setDir(0,-1);
                 break;
+            case 71: // tecla G to Grow
+                this.grow();
+                break;
+            case 83: // tecla S to Stop
+                this.setDir(0,0);
+                break;
           }
     }
 
+    grow() {
+        let head = this.body[this.body.length-1];
+        this.body.push(head);
+    }
+
     update() {
-        this.pos.x += this.vel.x;
-        this.pos.y += this.vel.y;
+        let head = this.body[this.body.length-1];//.copy();
+        this.body.unshift();
+        let newPos = {
+            x: this.body[0].x + this.vel.x,
+            y: this.body[0].y + this.vel.y
+        }
+        this.body.unshift(newPos);
+        this.body.pop();
     }
 
     show() {
         const p5 = this._p5; // just to be more readable
         p5.fill(0);
         p5.noStroke();
-        p5.rect( this.pos.x, this.pos.y, 1);
+        this.body.map( (item:Vector) => {
+            p5.rect( item.x, item.y, 1);
+        })
     }
 
 }

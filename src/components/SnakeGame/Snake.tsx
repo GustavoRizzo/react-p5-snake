@@ -1,4 +1,5 @@
 import { P5Instance } from "react-p5-wrapper";
+import Food from "./Food";
 import Vector from "./Vector";
 
 export default class Snake {
@@ -19,7 +20,7 @@ export default class Snake {
     }
 
     moveControl (keyPressed: number) {
-        const p5 = this._p5; // just to be more readable
+        const p5 = this._p5; // to be more readable
         switch (this._p5.keyCode) {
             case p5.LEFT_ARROW:
                 this.setDir(-1,0);
@@ -43,12 +44,20 @@ export default class Snake {
     }
 
     grow() {
-        let head = this.body[this.body.length-1];
-        this.body.push(head);
+        let tail = this.body[this.body.length-1];
+        this.body.push(tail);
     }
 
-    update() {
-        let head = this.body[this.body.length-1];//.copy();
+    update(foods:Food[]) {
+        this.updatePosition();
+
+        if(this.checkFeeding(foods)) {
+            console.log("comeu");
+            this.grow();
+        }
+    }
+
+    updatePosition() {
         this.body.unshift();
         let newPos = {
             x: this.body[0].x + this.vel.x,
@@ -58,8 +67,22 @@ export default class Snake {
         this.body.pop();
     }
 
+    checkFeeding(foods:Food[]) :boolean {
+        let flag = false;
+        let head = {
+            x: this.body[0].x,
+            y: this.body[0].y
+        }
+        foods.map( (item:Food) => {
+            if(head.x==item.pos.x && head.y==item.pos.y) {
+                flag=true;
+            }
+        })
+        return flag;        
+    }
+
     show() {
-        const p5 = this._p5; // just to be more readable
+        const p5 = this._p5; // to be more readable
         p5.fill(0);
         p5.noStroke();
         this.body.map( (item:Vector) => {

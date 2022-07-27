@@ -1,9 +1,5 @@
 import { P5Instance } from "react-p5-wrapper";
-
-interface Vector {
-    x: number,
-    y: number
-}
+import Vector from "./Vector";
 
 export default class Snake {
     _p5: P5Instance;

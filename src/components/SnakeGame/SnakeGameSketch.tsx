@@ -22,7 +22,9 @@ export function snakeGameSketch (p5: P5Instance) {
   p5.draw = () => { 
     p5.scale(resolution);
     p5.background(111);
+
     snake.update(foods);
+    foods = foods.filter(Food.checkNotEaten);
 
     snake.show();
     foods.map( (item:Food) => { item.show(); });

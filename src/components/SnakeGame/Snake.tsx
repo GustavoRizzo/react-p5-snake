@@ -1,18 +1,18 @@
 import { P5Instance } from "react-p5-wrapper";
 import Food from "./Food";
-import Vector from "./Vector";
+import Position2D from "./Position2D";
 
 export default class Snake {
     _p5: P5Instance;
-    body:Vector[] =[] ;
-    vel: Vector;
+    body:Position2D[] = [];
+    vel: Position2D;
 
     constructor(p5: P5Instance) {
         this._p5 = p5;
         this.body[0] = {x: 20 , y: 10};
         this.vel = {x: 0 , y: 0};
 
-        this.body[1] = {x: 20 , y: 20};
+        this.body[1] = {x: 20 , y: 10};
     }
 
     setDir(x: number, y: number) {
@@ -49,10 +49,11 @@ export default class Snake {
     }
 
     update(foods:Food[]) {
+        this.checkFinishedFeeding(foods);
+
         this.updatePosition();
 
         if(this.checkFeeding(foods)) {
-            console.log("comeu");
             this.grow();
         }
     }
@@ -69,23 +70,36 @@ export default class Snake {
 
     checkFeeding(foods:Food[]) :boolean {
         let flag = false;
-        let head = {
-            x: this.body[0].x,
-            y: this.body[0].y
-        }
-        foods.map( (item:Food) => {
-            if(head.x==item.pos.x && head.y==item.pos.y) {
-                flag=true;
+        const headPosition = JSON.stringify(this.body[0]);
+
+        foods.map( (food:Food) => {
+            const foodPosition = JSON.stringify(food.pos);
+            if(headPosition == foodPosition) {
+                flag = true;
+                food.wasSwallowed();
             }
-        })
+        });
+
         return flag;        
+    }
+
+    checkFinishedFeeding(foods:Food[]) {
+        let flag = false;
+        const tailPosition = JSON.stringify(this.body[this.body.length-1]);
+
+        foods.map( (food:Food) => {
+            const foodPosition = JSON.stringify(food.pos);
+            if(tailPosition == foodPosition) {
+                food.wasEaten();
+            }
+        });     
     }
 
     show() {
         const p5 = this._p5; // to be more readable
         p5.fill(0);
         p5.noStroke();
-        this.body.map( (item:Vector) => {
+        this.body.map( (item:Position2D) => {
             p5.rect( item.x, item.y, 1);
         })
     }

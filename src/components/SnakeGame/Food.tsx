@@ -2,7 +2,7 @@ import { P5Instance } from "react-p5-wrapper";
 import Position2D from "./Position2D";
 
 enum State {
-    Free,
+    Available,
     Swallowed,
     Eaten
 }
@@ -16,14 +16,14 @@ export default class Food {
     constructor(p5: P5Instance, pos: Position2D) {
         this._p5 = p5;
         this.pos = pos;
-        this.state = State.Free;
+        this.state = State.Available;
     }
 
-    wasSwallowed () {
+    setSwallowed () {
         this.state = State.Swallowed;
     }
 
-    wasEaten () {
+    setEaten () {
         this.state = State.Eaten; 
     }
 
@@ -33,7 +33,7 @@ export default class Food {
 
     show() {
         const p5 = this._p5; // just to be more readable
-        (this.state == State.Free) ? p5.fill(150,0,0) : p5.fill(60,0,0);
+        (this.state == State.Available) ? p5.fill(150,0,0) : p5.fill(60,0,0);
         p5.noStroke();
         p5.rect( this.pos.x, this.pos.y, 1);
     }

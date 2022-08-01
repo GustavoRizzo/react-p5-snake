@@ -15,7 +15,7 @@ export default class Snake {
         this.body[1] = {x: 20 , y: 10};
     }
 
-    setDir(x: number, y: number) {
+    setDirection(x: number, y: number) {
         this.vel = {x: x , y: y};
     }
 
@@ -23,22 +23,22 @@ export default class Snake {
         const p5 = this._p5; // to be more readable
         switch (this._p5.keyCode) {
             case p5.LEFT_ARROW:
-                this.setDir(-1,0);
+                this.setDirection(-1,0);
                 break;
             case p5.RIGHT_ARROW:
-                this.setDir(1,0);
+                this.setDirection(1,0);
                 break;
             case p5.DOWN_ARROW:
-                this.setDir(0,1);
+                this.setDirection(0,1);
                 break;
             case p5.UP_ARROW:
-                this.setDir(0,-1);
+                this.setDirection(0,-1);
                 break;
-            case 71: // tecla G to Grow
+            case 71: // Key G to Grow
                 this.grow();
                 break;
-            case 83: // tecla S to Stop
-                this.setDir(0,0);
+            case 83: // Key S to Stop
+                this.setDirection(0,0);
                 break;
           }
     }
@@ -49,7 +49,7 @@ export default class Snake {
     }
 
     update(foods:Food[]) {
-        this.checkFinishedFeeding(foods);
+        this.checkIfFed(foods);
 
         this.updatePosition();
 
@@ -76,21 +76,21 @@ export default class Snake {
             const foodPosition = JSON.stringify(food.pos);
             if(headPosition == foodPosition) {
                 flag = true;
-                food.wasSwallowed();
+                food.setSwallowed();
             }
         });
 
         return flag;        
     }
 
-    checkFinishedFeeding(foods:Food[]) {
+    checkIfFed(foods:Food[]) {
         let flag = false;
         const tailPosition = JSON.stringify(this.body[this.body.length-1]);
 
         foods.map( (food:Food) => {
             const foodPosition = JSON.stringify(food.pos);
             if(tailPosition == foodPosition) {
-                food.wasEaten();
+                food.setEaten();
             }
         });     
     }

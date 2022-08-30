@@ -1,5 +1,5 @@
 import { P5Instance } from "react-p5-wrapper";
-import Food from "./Food";
+import FoodCollection from "./FoodCollection";
 import Position2D from "./Position2D";
 
 export default class Snake {
@@ -10,9 +10,8 @@ export default class Snake {
     constructor(p5: P5Instance) {
         this._p5 = p5;
         this.body[0] = {x: 20 , y: 10};
+        this.body[1] = {x: 20 , y: 10};        
         this.vel = {x: 0 , y: 0};
-
-        this.body[1] = {x: 20 , y: 10};
     }
 
     setDirection(x: number, y: number) {
@@ -48,7 +47,7 @@ export default class Snake {
         this.body.push(tail);
     }
 
-    update(foods:Food[]) {
+    update(foods:FoodCollection) {
         this.checkIfFed(foods);
 
         this.updatePosition();
@@ -68,31 +67,14 @@ export default class Snake {
         this.body.pop();
     }
 
-    checkFeeding(foods:Food[]) :boolean {
-        let flag = false;
-        const headPosition = JSON.stringify(this.body[0]);
-
-        foods.map( (food:Food) => {
-            const foodPosition = JSON.stringify(food.pos);
-            if(headPosition == foodPosition) {
-                flag = true;
-                food.setSwallowed();
-            }
-        });
-
-        return flag;        
+    checkFeeding(foodCollection:FoodCollection) :boolean {
+        let head = this.body[0]
+        return foodCollection.checkFoodIsInSamePosition(head, 'swallow');        
     }
 
-    checkIfFed(foods:Food[]) {
-        let flag = false;
-        const tailPosition = JSON.stringify(this.body[this.body.length-1]);
-
-        foods.map( (food:Food) => {
-            const foodPosition = JSON.stringify(food.pos);
-            if(tailPosition == foodPosition) {
-                food.setEaten();
-            }
-        });     
+    checkIfFed(foodCollection:FoodCollection) :boolean {
+        let tail = this.body[this.body.length-1];
+        return foodCollection.checkFoodIsInSamePosition(this.body[0], 'eaten');   
     }
 
     show() {

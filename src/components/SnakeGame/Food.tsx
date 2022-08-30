@@ -31,6 +31,10 @@ export default class Food {
         return (food.state != State.Eaten);
     }
 
+    static checkAvailable (food: Food) {
+        return (food.state == State.Available);
+    }
+
     show() {
         const p5 = this._p5; // just to be more readable
         (this.state == State.Available) ? p5.fill(150,0,0) : p5.fill(60,0,0);

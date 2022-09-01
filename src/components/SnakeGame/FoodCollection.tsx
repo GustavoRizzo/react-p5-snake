@@ -28,7 +28,7 @@ export default class FoodCollection {
         let maxWidth = this._p5.width / this.resolution;
         let maxHeight = this._p5.height / this.resolution;        
         let randomX =  this.getRandomInt(maxWidth);
-        let randomY =  this.getRandomInt(maxWidth);
+        let randomY =  this.getRandomInt(maxHeight);
         let randomFood = new Food(this._p5, {x:randomX, y:randomY});
         this.foods.push(randomFood);
     }
